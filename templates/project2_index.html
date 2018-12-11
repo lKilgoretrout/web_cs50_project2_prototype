@@ -1,0 +1,39 @@
+{% extends "project2_layout.html" %}
+
+{% block javascripts %} 
+        <script src="{{ url_for('static', filename='project2_index.js') }}"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+{% endblock %}
+
+{% block title %}
+    Project 2
+{% endblock %}
+
+{% block body %}    
+
+    
+    <h1 id="welcome_banner">{{ message }}</h1>
+
+    <p align="left">Logged in as <span style="color:white">{{ user_id }}</span></p>
+    <a style="color:white;" href = '/logout'>click to log out</a>
+<br>
+<br>
+
+<nav>
+    Channels <p>
+    <p>
+        <table id="channels">
+        </table>
+    <p>
+
+    Create new channel
+    <p>
+    <form id="new_channel" >
+        <input id="channel_name" type="text" name="new_channel" autocomplete="off" autofocus placeholder="new channel">
+        <input id="channel_submit" type=submit>
+    </form>
+  
+</nav>
+
+
+{% endblock %}       

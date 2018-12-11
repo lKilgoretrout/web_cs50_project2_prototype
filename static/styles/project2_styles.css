@@ -1,0 +1,20 @@
+body {
+    background-color:#ff3300;
+}
+
+#logout {
+    vertical-align: baseline;
+}
+
+#channels {
+    border: 2px solid black;
+    /*border-collapse: collapse;*/
+}
+
+#channels td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+    background-color: light-blue;
+    }
+
