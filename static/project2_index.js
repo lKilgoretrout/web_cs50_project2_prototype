@@ -1,10 +1,29 @@
 var global_channel_list = [];
 
+function add_channel(channel_name) {
+    var table_row = document.createElement('tr');
+    
+    var table_data = table_row.insertCell(-1);
+    table_data.innerHTML = channel_name;
+
+    // Add channel_name to #channels table
+    document.querySelector('#channels').append(new_channel);
+
+    // append channel_name to [client] global_channel_list:
+    global_channel_list.push(channel_name);
+    
+};
+
+
 
 // create a channel 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // Connect to websocket
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
     // the channel submit button is disabled by default:
-    document.querySelector('#channel_submit').disabled = false;
+    document.querySelector('#channel_submit').disabled = true;
 
      // Enable button only if there is text in the input field
     document.querySelector('#new_channel').onkeyup = () => {
@@ -20,24 +39,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#channel_submit').disabled = true;
     };
 
+// channel submit: 
+
     document.querySelector('#new_channel').onsubmit = () => {
-        
-        const tr = document.createElement('tr');
-        tr.innerHTML = document.querySelector('#channel_name').value;
-        const channelName = document.querySelector('#channel_name').value;
-        
-        // Add channel_name to #channels table
-        document.querySelector('#channels').append(tr);
-
-        // append channel_name to global_channel_list:
-        global_channel_list.push(channelName);
-
+        var channel = document.querySelector('#channel_name').value;
         // Clear input field
         document.querySelector('#channel_name').value = '';
+        
+        socket.emit('submit channel', channel);
 
-        // Stop form from submitting
         return false;
     };
+        
+    socket.on('create channel', channel_name => {
+        add_channel(channel_name);
+        
+    })
+        
+    
 });
 
 

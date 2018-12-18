@@ -12,6 +12,7 @@ socketio = SocketIO(app)
 Session(app)
 
 display_names_list = []
+channel_list = ["General"]
 
 @app.route('/')
 def index():
@@ -39,7 +40,24 @@ def register():
         return render_template('project2_register.html', \
             message=f"Please enter a user_id", user_id=None)
 
+
 ###########
+
+@socketio.on('submit channel')
+def create_channel(channel):
+    '''Gets channel submit form, adds it to server channel list, 
+       emits this data back to the webpage'''
+    channel_name = channel
+    channel_list.append(channel_name)
+    emit("create channel", channel_name, broadcast=True)
+    return 1
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
