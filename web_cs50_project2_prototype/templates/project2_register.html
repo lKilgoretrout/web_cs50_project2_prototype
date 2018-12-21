@@ -1,0 +1,27 @@
+{% extends "project2_layout.html" %}
+
+{% block javascripts %} 
+<!--        <script src="{{ url_for('static', filename='project2_register.js') }}"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+-->
+{% endblock %}
+
+{% block title %}
+    Register or Login
+{% endblock %}
+
+
+{% block body %}
+<body style="background-color:orange;">
+    
+    {{ message }}
+
+        <form action="/register" method="POST">
+            <input style ="background-color:#ffa366;" type="user_id" required="required" name="user_id" placeholder="user_id">
+            <button id="user_id_submit" style="background-color:#ff3300;">submit user_id</button>
+        </form>
+    
+<a href = '/logout'>click to log out</a>
+
+</body>
+{% endblock %}
