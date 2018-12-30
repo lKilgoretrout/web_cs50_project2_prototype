@@ -42,8 +42,8 @@ function create_message(message) {
     
     table_data.setAttribute("id", message["user_from"])
 
-    let timeStamp = String(message["timestamp"]);
-    let displayName = String(message["user_from"]);
+    let timeStamp = String("<font class='timeStamp'>" + message["timestamp"] + "</font>");
+    let displayName = String("<font class='displayName'> @" + message["user_from"] + "</font><br>");
     let messageText = String(message["msg_txt"]);
 
     let newMessage = timeStamp + ' ' + displayName + ' ' + messageText;
@@ -149,26 +149,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
      // Enable channel button only if there is text in the input field
     document.querySelector('#new_channel').onkeyup = () => {
-        if (document.querySelector('#channel_name').value.length > 0) 
+        if (document.querySelector('#channel_name').value.length > 0) {
             document.querySelector('#channel_submit').disabled = false;
-        else
+
+        } else {
             document.querySelector('#channel_submit').disabled = true;
-            
+
+        }
         // if the channel name is a duplicate, don't allow submission:
         if (channel_list.length > 0)  
             if (channel_list.includes(document.querySelector('#channel_name').value))    
                 document.querySelector('#channel_submit').disabled = true;
+
+        // limit channel names to < 32 characters
+        if (document.querySelector('#channel_name').value.length > 32) {
+            document.querySelector('#channel_submit').disabled = true;
+            alert("Channel names must be fewer than 32 characters");
+        }
     };
     
-    // Enable message button only if there is text in the input field
+    // Enable message button only if (0 < message_text < 65)
     document.querySelector('#new_message').onkeyup = () => {
-        if (document.querySelector('#message_text').value.length > 0) 
+        if (document.querySelector('#message_text').value.length < 1)
             document.querySelector('#submit_message').disabled = false;
-        else
-            document.querySelector('#submit_message').disabled = true;
+            
+        if (document.querySelector('#message_text').value.length > 64) {
+            document.querySelector('#submit_message').disabled = false;
+            alert("Messages must be fewer than 64 characters")
+            
+
+        } else {
+            document.querySelector('#submit_message').disabled = false;
+        };
     };
-
-
+    
 
     // channel submit form handler: 
 

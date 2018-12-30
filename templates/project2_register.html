@@ -12,13 +12,13 @@
 
 
 {% block body %}
-<body style="background-color:orange;">
+<body style="background-color:purple;">
     
     {{ message }}
 
         <form action="/register" method="POST">
-            <input style ="background-color:#ffa366;" type="user_id" required="required" name="user_id" placeholder="user_id">
-            <button id="user_id_submit" style="background-color:#ff3300;">submit user_id</button>
+            <input style ="background-color:violet;" type="user_id"  minlength="1" maxlength="32"required="required" name="user_id" placeholder="user_id">
+            <button id="user_id_submit" style="background-color:purple;">submit user_id</button>
         </form>
     
 <a href = '/logout'>click to log out</a>

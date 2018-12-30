@@ -37,7 +37,7 @@ def index():
         user_id = session['user_id']
         return render_template("project2_index.html", message=f"Welcome to my WebCS50 Project2, {user_id}", user_id=user_id)
     else:
-        return render_template("project2_register.html", message=f"Please enter a user_id", user_id=None)
+        return render_template("project2_register.html", message=f"Please enter a user_id (1-32 characters)", user_id=None)
         
         
 @app.route('/logout')
