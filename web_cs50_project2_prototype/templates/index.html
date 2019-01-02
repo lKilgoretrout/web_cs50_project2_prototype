@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="{{ url_for('static', filename='index.js') }}"></script>
+        <title>Project 2 </title>
+    </head>
+    <body>
+        <h1 id="welcome_banner"></h1>
+
+        <form id="display_name">
+            <input id="user_id" autocomplete="off" autofocus placeholder="type a name" required="required" type="text">
+            <input type="submit" value="Set Your Display Name">
+        </form>
+        <br>
+        <div id="result"></div>
+    </body>
+</html>
