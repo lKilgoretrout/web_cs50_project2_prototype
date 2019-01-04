@@ -2,6 +2,10 @@ var channel_list = [];
 var current_channel;
 
 function clickHandler(channel_name) {
+    /** function runs from ClickHandlerObject stored in each
+     * channel's table_data (inside add_channel())
+     * Sets current channel to bold and configure's messages
+     */
 
     current_channel = channel_name;
     
@@ -35,12 +39,15 @@ function create_message(message) {
 /** message = {"msg_txt": msg_txt,
                "channel": channel,
                "timestamp": timestamp,
-               "user_from": user_from} 
+               "user_from": user_from
+               "deleteID": deleteID} 
 */
+    var channel = message['channel']
+    var deleteID = message['deleteID']
     var table_row = document.createElement('tr');
     var table_data = table_row.insertCell(-1);
-    
     table_data.setAttribute("id", message["user_from"])
+    table_data.setAttribute("data-deleteID", deleteID);
 
     let timeStamp = String("<font class='timeStamp'>" + message["timestamp"] + "</font>");
     let displayName = String("<font class='displayName'> @" + message["user_from"] + "</font><br>");
@@ -48,8 +55,35 @@ function create_message(message) {
 
     let newMessage = timeStamp + ' ' + displayName + ' ' + messageText;
     table_data.innerHTML = newMessage
+
+    // event handler for deleting messages:
+    // clicking on a message runs deleteMessage()
+    var deleteMessageHandler = table_row.querySelector("td");
+    deleteMessageHandler.addEventListener("click", function () {deleteMessage(deleteID, channel);});
+    
     document.querySelector('#message_list').append(table_row);
 }
+
+function deleteMessage(deleteID, channel) {
+    // Connect to websocket
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+    
+    //var match = messages.querySelector("tr[data-deleteID= deleteID]");
+    //var messageToDelete = document.querySelectorAll("[data-deleteID='" + deleteID + "']");
+    //var messages = document.querySelector("#message_list");
+    //console.log(messageToDelete);
+
+    if (confirm("Do you want to delete this message forever and ever ?")) {
+        
+        //messages.removeChild(messageToDelete.parentNode);
+        
+        socket.emit("delete message", deleteID, channel);
+        configure_messages(channel);
+      } else {
+        alert("Whatever... I wasn't going to delete that message anyway");
+      } 
+    }
 
 function add_channel(channel_name, select) {
 /** adds channel as table_row with table_data into (id=channels) table 
@@ -139,8 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	    var id = socket.io.engine.id;
         var displayName = localStorage.getItem('dn')
 	    socket.emit("join", {"displayName": displayName, "room": id});
-	    //get_channels();
-	    //configure_users();
 	});
 
     // the channel/message submit button is disabled by default:
@@ -209,12 +241,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	var current_time = new Date().toLocaleTimeString();
 	var displayName = document.getElementById('displayName').innerHTML;
     var channel = localStorage.getItem('current_channel')
+    var deleteID = Math.floor(new Date().getTime());
 
 	document.getElementById('message_text').value = "";
 	//document.getElementById('submit_message').disabled = true;
 	
 	// send message form data to server 
-	socket.emit('submit message', {'msg_txt': msg_txt, 'channel': channel,'timestamp': current_time, 'user_from': displayName});
+    socket.emit('submit message', 
+        {'msg_txt': msg_txt,
+         'channel': channel,
+         'timestamp': current_time,
+         'user_from': displayName,
+         'deleteID': deleteID});
+
     //console.log('socket.emit ("submit message") done sent!')
 	return false;
     };

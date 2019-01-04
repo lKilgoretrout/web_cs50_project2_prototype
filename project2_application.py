@@ -22,7 +22,8 @@ startup_message = {
     "user_from": "Flack",
     "user_to": "",
     "timestamp": now.strftime("%a %b %d %I:%M:%S"), 
-    "msg_txt": "Welcome to my WebCS50 Project2: 'Flack' "}
+    "msg_txt": "Welcome to my WebCS50 Project2: 'Flack' ",
+    "deleteID": None }
 
 channel_messages = {
     "General": {
@@ -64,8 +65,8 @@ def get_messages():
     channel = request.form.get("channel")
     display_name = request.form.get("displayName")
 
-    print('@app.route("/get_messages", methods=["POST"])')
-    print('channel = ', channel)
+    #print('@app.route("/get_messages", methods=["POST"])')
+    #print('channel = ', channel)
     
     # if no messages, set to startup_message
     try:
@@ -87,11 +88,13 @@ def new_message(data):
     user_from = data["user_from"]
     msg_txt = data["msg_txt"]
     timestamp = data["timestamp"]
+    deleteID = data["deleteID"]
 
     message = {"msg_txt": msg_txt,
                "channel": channel,
                "timestamp": timestamp,
-               "user_from": user_from}
+               "user_from": user_from,
+               "deleteID": deleteID }
 
     ''' channel_messages = {
             "General": {
@@ -113,10 +116,9 @@ def new_message(data):
     channel_messages[channel]['messages'].append(message)
 
 ##################
-    print('within @socketio.on("submit message")')
-    print('[channel] = ', channel)
-    print("channel_messages[channel]['messages']", channel_messages[channel]['messages'])
-
+    #print('within @socketio.on("submit message")')
+    #print('[channel] = ', channel)
+    #print("channel_messages[channel]['messages']", channel_messages[channel]['messages'])
 
     emit("create message", message, broadcast=True)
         
@@ -140,6 +142,30 @@ def join(data):
     
     return jsonify({"success": True})
 
+'''
+ del channel_messages[channel]['messages'][msg]
+TypeError: list indices must be integers or slices, not dict
+'''
+
+@socketio.on('delete message')
+def delete_message(deleteID, channel):
+    ''' deletes message with given deleteID and channel'''
+
+    for msg in channel_messages[channel]['messages']:
+        msg_index = channel_messages[channel]['messages'].index(msg)
+        
+        if msg['deleteID'] == deleteID:
+            #print("channel_messages[channel]['messages'][msg] :", channel_messages[channel]['messages'][msg])
+            del channel_messages[channel]['messages'][msg_index]
+    
+    
+'''    
+    channel_messages = {
+    "General": {
+        'messages': [startup_message]
+    }}
+'''
+    
 
 
 if __name__ == "__main__":
